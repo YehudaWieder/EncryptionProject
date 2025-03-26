@@ -1,12 +1,12 @@
 from math import ceil
 
-def transposition(message, key):
-    print(len(message))
+def transposition(path, key):
+    print(len(path))
 
     encryption_message =  ""
-    for i in range(ceil(len(message) // key) + 1):
-        for j in range(i, len(message), ceil(len(message) // key) + 1):
-            encryption_message += message[j]
+    for i in range(ceil(len(path) // key) + 1):
+        for j in range(i, len(path), ceil(len(path) // key) + 1):
+            encryption_message += path[j]
 
     print(encryption_message)
     print(len(encryption_message))
@@ -14,7 +14,3 @@ def transposition(message, key):
 
 transposition("WE ARE DISCOVERED FLEE AT ONCE", 6)
 
-# def encryption(inputs):
-#     method = inputs[0]
-#     if method == "Transposition":
-#        return transposition(inputs[1], inputs[2])

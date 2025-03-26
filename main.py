@@ -1,21 +1,33 @@
 from pyinputplus import *
-from encryption import encryption
+import encryption
 
+def caesar_input():
+    pass
+
+def transposition_input():
+    path = inputFilepath("Enter the path to the input file: ", mustExist=True),
+    key = inputInt("please enter your key: ")
+    encryption.transposition(path, key)
+
+def rsa_input():
+    pass
 
 def encrypting_input():
     print("Encrypting a text file:")
     encrypting_methods = [r'Caesar', 'Transposition', 'RSA']
-    inputs = (
-        inputStr("Which encryption method to use (e.g., Caesar, Transposition, RSA)?: ",
-                 allowRegexes=encrypting_methods, blockRegexes=[r'.*']),
-        inputFilepath("Enter the path to the input file: ", mustExist=True),
-        inputInt("please enter your key: ")
-    )
-    ee = encryption(inputs)
-    print(ee)
+    method = inputStr("Which encryption method to use (e.g., Caesar, Transposition, RSA)?: ",
+             allowRegexes=encrypting_methods, blockRegexes=[r'.*'])
+
+    if method == "Caesar":
+        caesar_input()
+    elif method == "Transposition":
+        transposition_input()
+    else:
+        rsa_input()
 
 def decrypting_input():
     print("Decrypting a text file:")
+
 
 
 def steganography_input():
