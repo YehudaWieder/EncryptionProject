@@ -1,4 +1,49 @@
 from math import ceil
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
+
+def generate_keys():
+    # Generate a new RSA key pair with a size of 2048 bits
+    key = RSA.generate(2048)
+
+    # Export and save the private key to a file (private.pem)
+    private_key = key.export_key()
+    with open("private.pem", "wb") as priv_file:
+        priv_file.write(private_key)
+
+    # Export and save the public key to a file (public.pem)
+    public_key = key.public_key().export_key()
+    with open("public.pem", "wb") as pub_file:
+        pub_file.write(public_key)
+
+    print("RSA keys generated successfully!")
+
+# Generate RSA key pair
+generate_keys()
+
+
+
+def encrypt_file(input_file, output_file, public_key_path="public.pem"):
+    # Load the public key from the given file
+    with open(public_key_path, "rb") as key_file:
+        public_key = RSA.import_key(key_file.read())
+
+    # Create an RSA cipher object using the public key and OAEP padding
+    cipher_rsa = PKCS1_OAEP.new(public_key)
+
+    # Read the content of the input file
+    with open(input_file, "rb") as f:
+        file_data = f.read()
+
+    # Encrypt the file data using RSA
+    encrypted_data = cipher_rsa.encrypt(file_data)
+
+    # Save the encrypted data to the output file
+    with open(output_file, "wb") as f:
+        f.write(encrypted_data)
+
+    print(f"File '{input_file}' encrypted successfully to '{output_file}'")
+    
 
 def transposition(path, key):
     print(len(path))
