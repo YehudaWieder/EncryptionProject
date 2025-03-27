@@ -2,50 +2,40 @@ from PIL import Image
 
 
 def text_to_binary(text):
-    """המרת טקסט למחרוזת בינארית (ASCII → Binary)"""
+    """convert to binary (ASCII → Binary)"""
     return ''.join(format(ord(char), '08b') for char in text)
 
-def hide_message():
-    """הטמעת הודעה בתמונה באמצעות LSB Steganography"""
-    # קבלת קלט מהמשתמש
-    image_path = input("📷 הכנס את שם קובץ התמונה (למשל: input.png): ")
-    message = input("🔒 הכנס את ההודעה שברצונך להסתיר: ")
-    output_image = input("💾 הכנס את שם קובץ הפלט (למשל: encoded_image.png): ")
-
-    # טעינת התמונה
+def hide_message(image_path, message):
+    # upload img
     img = Image.open(image_path)
     pixels = list(img.getdata())
 
-    # המרת ההודעה לבינארי
+    #convert to binary
     binary_message = text_to_binary(message)
     message_length = len(binary_message)
 
-    # הדפסת אורך ההודעה והבינארי שלה
-    print(f"🔍 אורך ההודעה: {message_length} ביטים")
-    print(f"🔍 הבינארי של ההודעה: {binary_message[:100]}...")  # הצגת רק החלק הראשון של הבינארי לצורך הדיבוג
-
-    # שמירת אורך ההודעה כ-32 ביטים ראשונים
+    # Keep the message length as the first 32 bits
     binary_length = format(message_length, '032b')
     full_binary = binary_length + binary_message
 
-    # בדיקה שהתמונה גדולה מספיק להכיל את ההודעה
+    # Check that the image is large enough to contain the message
     if len(full_binary) > len(pixels) * 3:
-        raise ValueError("❌ ההודעה ארוכה מדי בשביל להיכנס לתמונה.")
+        raise ValueError("The message is too long to fit into the image.")
 
-    # החדרת ההודעה לפיקסלים
+    # Insert the message into pixels
     new_pixels = []
     binary_index = 0
 
     for pixel in pixels:
-        new_pixel = list(pixel)  # הפיכת tuple לרשימה
-        for channel in range(3):  # מעבר על R, G, B
+        new_pixel = list(pixel)  # Convert a tuple to a list
+        for channel in range(3):  # Pass through R, G, B
             if binary_index < len(full_binary):
                 new_pixel[channel] = (new_pixel[channel] & ~1) | int(full_binary[binary_index])
                 binary_index += 1
         new_pixels.append(tuple(new_pixel))
 
-    # שמירת התמונה החדשה
+    # Save the new image
     img.putdata(new_pixels)
-    img.save(output_image, "PNG")  # שמור תמיד בפורמט PNG
-    print(f"✅ ההודעה הוטמעה בהצלחה בתוך {output_image}!")
-hide_message()
+    output_image_path = f"{image_path.rsplit(".", 1)[0]}.PNG"
+    img.save(output_image_path)
+    print(f" Message successfully hiding inside: {output_image_path}!")

@@ -1,23 +1,9 @@
 import pyinputplus as pyip
 import encryption
+import img_decode
+import img_encode
 
-is_input_main_or_exit = lambda x: main() if x == "main" else stap_run() if x == "exit" else None
-
-
-# def caesar_input():
-#     text = pyip.inputStr("Enter the text: ")
-#     key = pyip.inputInt("Enter the encryption key (integer): ", min=1, max=25)
-#
-#     encryption.caesar_cipher(text, key)
-#
-# def transposition_input():
-#     path = pyip.inputFilepath("Enter the path to the input file: ", mustExist=True)
-#     key = pyip.inputInt("please enter your key: ")
-#
-#     encryption.transposition_cipher(path, key)
-#
-# def rsa_input():
-#     pass
+# is_input_main_or_exit = lambda x: main() if x == "main" else stap_run() if x == "exit" else None
 
 def encrypting_input():
     print("""
@@ -67,10 +53,16 @@ def decrypting_input():
 
 def steganography_input():
     print("Hiding a message in an image:")
+    image_path = pyip.inputFilepath("Enter the path to the input file: ", mustExist=True)
+    message = pyip.inputStr("Enter the message to the hiding:")
+
+    img_encode.hide_message(image_path, message)
 
 
 def steganography_extraction_input():
     print("Extracting a message from an image:")
+    image_path = pyip.inputFilepath("Enter the encrypted image file name: ")
+    img_decode.extract_message(image_path)
 
 
 def stap_run():

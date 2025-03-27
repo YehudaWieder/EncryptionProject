@@ -10,5 +10,5 @@ def write_result_file(path: str, string, encrypt=True):
     new_path = f"{path.rsplit(".", 1)[0]}.{extension}"
     with open(f'{new_path}', "w", encoding='utf-8') as file:
         file.write(string)
-        print(f"Successfully wrote to {new_path}")
+        print(f"{extension}ryption Successfully wrote to {new_path}")
 

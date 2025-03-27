@@ -18,7 +18,6 @@ def main():
         4: steganography_extraction_input,
         5: stap_run
     }
-    is_input_main_or_exit(response)
     menus[response]()
 
 
