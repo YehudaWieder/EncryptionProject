@@ -1,4 +1,4 @@
-from math import ceil
+from file_functions import *
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 
@@ -21,72 +21,56 @@ def generate_keys():
 # Generate RSA key pair
 generate_keys()
 
-
-
-def encrypt_file(input_file, output_file, public_key_path="public.pem"):
-    # Load the public key from the given file
-    with open(public_key_path, "rb") as key_file:
-        public_key = RSA.import_key(key_file.read())
-
-    # Create an RSA cipher object using the public key and OAEP padding
-    cipher_rsa = PKCS1_OAEP.new(public_key)
-
-    # Read the content of the input file
-    with open(input_file, "rb") as f:
-        file_data = f.read()
-
-    # Encrypt the file data using RSA
-    encrypted_data = cipher_rsa.encrypt(file_data)
-
-    # Save the encrypted data to the output file
-    with open(output_file, "wb") as f:
-        f.write(encrypted_data)
-
-    print(f"File '{input_file}' encrypted successfully to '{output_file}'")
-    
-
-def transposition(path, key):
-    print(len(path))
-
-    encryption_message =  ""
-    for i in range(ceil(len(path) // key) + 1):
-        for j in range(i, len(path), ceil(len(path) // key) + 1):
-            encryption_message += path[j]
-
-    print(encryption_message)
-    print(len(encryption_message))
-    return encryption_message
-
-transposition("WE ARE DISCOVERED FLEE AT ONCE", 6)
-import pyinputplus as pyip
-
-
-def caesar_cipher(text, key, decrypt=False):
-    if decrypt:
-        key = -key  # הפיכת המפתח לשלילי לפענוח
+def caesar_cipher(path, key, encrypt=True):
+    text = read_file(path)
+    if not encrypt:
+        key = -key
 
     result = ""
     for char in text:
-        if char.isalpha():  # רק אותיות משתנות
+        if char.isalpha():
             shift = 65 if char.isupper() else 97
             result += chr((ord(char) - shift + key) % 26 + shift)
         else:
-            result += char  # תווים שאינם אותיות נותרים ללא שינוי
-    return result
+            result += char
+    write_result_file(path, result, encrypt)
+
+def transposition_cipher(path, key, encrypt=True):
+    text = read_file(path)
+    if encrypt:
+        text += " " * (-len(text) % key)
+    else:
+        key = len(text) // key
+    n = len(text)
+    result = ""
+    for i in range(key):
+        for j in range(i, n, key):
+            result += text[j]
+    write_result_file(path, result, encrypt)
+
+def rsa_cipher(path, _, encrypt=True):
+    text = read_file(path)
+    if encrypt:
+        key_path = "public.pem"
+    else:
+        key_path = "private.pen"
+
+    # Load the key from the given file
+    with open(key_path, "rb") as key_file:
+        key = RSA.import_key(key_file.read())
+
+    # Create an RSA cipher object using the key and OAEP padding
+    cipher_rsa = PKCS1_OAEP.new(key)
+
+    if encrypt:
+        # Encrypt the file data using RSA
+        result = cipher_rsa.encrypt(text)
+    else:
+        result = cipher_rsa.decrypt(text)
+
+    # Save the encrypted data to the output file
+    write_result_file(path, result, encrypt)
 
 
-def main():
-    text = pyip.inputStr("Enter the text: ")
-    key = pyip.inputInt("Enter the encryption key (integer): ", min=1, max=25)
-
-    choice = pyip.inputMenu(["Encrypt", "Decrypt"], numbered=True)
-    decrypt = choice == "Decrypt"
-
-    result = caesar_cipher(text, key, decrypt)
-    print(f"{'Decrypted' if decrypt else 'Encrypted'} text: {result}")
-
-
-if __name__ == "__main__":
-    main()
 
 
