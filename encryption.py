@@ -1,6 +1,6 @@
 from file_functions import *
-from Crypto.PublicKey import RSA
-from Crypto.Cipher import PKCS1_OAEP
+# from Crypto.PublicKey import RSA
+# from Crypto.Cipher import PKCS1_OAEP
 
 def generate_keys():
     # Generate a new RSA key pair with a size of 2048 bits
