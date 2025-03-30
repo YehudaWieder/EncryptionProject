@@ -5,7 +5,6 @@ def main():
     What would you like to do?
     1. Encrypt a text file
     2. Decrypt a text file
-    3. Hide a message in an image
     4. Extract a message from an image
     5. Exit""")
 
