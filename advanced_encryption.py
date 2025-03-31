@@ -1,5 +1,8 @@
 from file_functions import *
 
+def caesar_cipher(path, key_word, encrypt=True):
+    pass
+
 def get_sorted_indexes(key_word, encrypt=True):
     sorted_positions =  [new_pos for new_pos, _ in sorted(enumerate(key_word), key=lambda x: x[1])]
     if encrypt:
@@ -31,9 +34,6 @@ def transposition_cipher(path, key_word, encrypt=True):
     except FileNotFoundError:
         print(f"Error: File '{path}' not found.")
 
-word = "ZEBRAS"
-get_sorted_indexes(word)
-get_sorted_indexes(word, False)
-transposition_cipher("try.txt", word)
-transposition_cipher("try.enc", word, False)
+def rsa_cipher(path, key_word, encrypt=True):
+    pass
 
