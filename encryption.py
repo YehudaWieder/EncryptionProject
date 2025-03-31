@@ -1,6 +1,6 @@
 from file_functions import *
-# from Crypto.PublicKey import RSA
-# from Crypto.Cipher import PKCS1_OAEP
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
 
 def generate_keys():
     # Generate a new RSA key pair with a size of 2048 bits
@@ -19,7 +19,7 @@ def generate_keys():
     print("RSA keys generated successfully!")
 
 # Generate RSA key pair
-# generate_keys()
+generate_keys()
 
 def caesar_cipher(path, key, encrypt=True):
         text = read_file(path)
@@ -54,7 +54,7 @@ def transposition_cipher(path, key, encrypt=True):
     except FileNotFoundError:
         print(f"Error: File '{path}' not found.")
 
-def rsa_cipher(path, _, encrypt=True):
+def rsa_cipher(path, encrypt=True):
     text = read_file(path)
     if encrypt:
         key_path = "public.pem"

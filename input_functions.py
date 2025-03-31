@@ -1,5 +1,6 @@
 import pyinputplus as pyip
 import os
+from main import main
 import encryption
 import img_decode
 import img_encode
@@ -12,6 +13,7 @@ def int_input(min, max):
         if response == "exit":
             exit()
         elif response == "main":
+            main()
             return
         elif response.isdigit() and not min <= int(response) <= max or not response.isdigit():
             print("Invalid input! Please enter a number (1-3) or the words 'exit' or 'main'.")
@@ -27,6 +29,7 @@ def file_input():
         if file_path == "exit":
             exit()
         elif file_path == "main":
+            main()
             return
         elif not os.path.isfile(file_path):
             print("Invalid input! Please enter a file path or the words 'exit' or 'main'.")
@@ -47,7 +50,7 @@ def encrypting_input():
     menus = {
         1: encryption.caesar_cipher,
         2: encryption.transposition_cipher,
-        # 3: encryption.rsa_cipher,
+        3: encryption.rsa_cipher,
     }
     print("Please enter your choice (A path to the message to hiding, exit, main):")
     path = file_input()
@@ -55,11 +58,9 @@ def encrypting_input():
     if choice != 3:
         print("please enter your key:")
         key = int_input(1, float("inf"))
+        menus[choice](path, key)
     else:
-        key = None
-
-    menus[choice](path, key)
-
+        menus[choice](path)
 
 def decrypting_input():
     print("""
