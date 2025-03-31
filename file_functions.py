@@ -7,7 +7,7 @@ def read_file(path):
 
 def write_result_file(path: str, string, encrypt=True):
     extension = "enc" if encrypt else "dec"
-    new_path = f"{path.rsplit(".", 1)[0]}.{extension}"
+    new_path = f"{path.rsplit('.', 1)[0]}.{extension}"
     with open(f'{new_path}', "w", encoding='utf-8') as file:
         file.write(string)
         print(f"{extension}ryption Successfully wrote to {new_path}")

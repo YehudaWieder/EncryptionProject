@@ -1,16 +1,18 @@
 from PIL import Image
+from file_functions import *
 
 
 def text_to_binary(text):
     """convert to binary (ASCII → Binary)"""
     return ''.join(format(ord(char), '08b') for char in text)
 
-def hide_message(image_path, message):
+def hide_message(image_path, path):
     # upload img
     img = Image.open(image_path)
     pixels = list(img.getdata())
 
     #convert to binary
+    message = read_file(path)
     binary_message = text_to_binary(message)
     message_length = len(binary_message)
 
@@ -36,6 +38,6 @@ def hide_message(image_path, message):
 
     # Save the new image
     img.putdata(new_pixels)
-    output_image_path = f"{image_path.rsplit(".", 1)[0]}.PNG"
+    output_image_path = f"{image_path.rsplit('.', 1)[0]}.png"
     img.save(output_image_path)
     print(f" Message successfully hiding inside: {output_image_path}!")
