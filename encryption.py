@@ -19,34 +19,40 @@ def generate_keys():
     print("RSA keys generated successfully!")
 
 # Generate RSA key pair
-generate_keys()
+# generate_keys()
 
 def caesar_cipher(path, key, encrypt=True):
-    text = read_file(path)
-    if not encrypt:
-        key = -key
+        text = read_file(path)
+        if not encrypt:
+            key = -key
 
-    result = ""
-    for char in text:
-        if char.isalpha():
-            shift = 65 if char.isupper() else 97
-            result += chr((ord(char) - shift + key) % 26 + shift)
-        else:
-            result += char
-    write_result_file(path, result, encrypt)
+        result = ""
+        for char in text:
+            if char.isalpha():
+                shift = 65 if char.isupper() else 97
+                result += chr((ord(char) - shift + key) % 26 + shift)
+            else:
+                result += char
+        write_result_file(path, result, encrypt)
 
 def transposition_cipher(path, key, encrypt=True):
-    text = read_file(path)
-    if encrypt:
-        text += " " * (-len(text) % key)
-    else:
-        key = len(text) // key
-    n = len(text)
-    result = ""
-    for i in range(key):
-        for j in range(i, n, key):
-            result += text[j]
-    write_result_file(path, result, encrypt)
+    try:
+        text = read_file(path)
+        if key > len(text) // 2:
+            return print("For good encryption performance, is required a key that his max value is half the length of the text.")
+
+        if encrypt:
+            text += " " * (-len(text) % key)
+        else:
+            key = len(text) // key
+        n = len(text)
+        result = ""
+        for i in range(key):
+            for j in range(i, n, key):
+                result += text[j]
+        write_result_file(path, result, encrypt)
+    except FileNotFoundError:
+        print(f"Error: File '{path}' not found.")
 
 def rsa_cipher(path, _, encrypt=True):
     text = read_file(path)
