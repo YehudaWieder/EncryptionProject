@@ -1,9 +1,39 @@
 import pyinputplus as pyip
+import os
 import encryption
 import img_decode
 import img_encode
 
-# is_input_main_or_exit = lambda x: main() if x == "main" else stap_run() if x == "exit" else None
+
+def int_input(min, max):
+    while True:
+        response = pyip.inputStr(f"Please enter your choice ({min}-{max} exit, main): \n").strip().lower()
+
+        if response == "exit":
+            exit()
+        elif response == "main":
+            return
+        elif response.isdigit() and not min <= int(response) <= max or not response.isdigit():
+            print("Invalid input! Please enter a number (1-3) or the words 'exit' or 'main'.")
+            continue
+        else:
+            break
+    return int(response)
+
+def file_input():
+    while True:
+        file_path = pyip.inputStr().strip()
+
+        if file_path == "exit":
+            exit()
+        elif file_path == "main":
+            return
+        elif not os.path.isfile(file_path):
+            print("Invalid input! Please enter a file path or the words 'exit' or 'main'.")
+            continue
+        else:
+            break
+    return file_path
 
 def encrypting_input():
     print("""
@@ -11,30 +41,34 @@ def encrypting_input():
         1. Caesar
         2. Transposition
         3. RSA""")
-    response = pyip.inputInt("Please enter your choice as a num 1 - 3: \n", min=1, max=3)
+
+    choice =  int_input(1, 3)
 
     menus = {
         1: encryption.caesar_cipher,
         2: encryption.transposition_cipher,
         # 3: encryption.rsa_cipher,
-
     }
-    path = pyip.inputFilepath("Enter the path to the input file: ", mustExist=True)
-    if response != 3:
-        key = pyip.inputInt("please enter your key: ")
+    print("Please enter your choice (A path to the message to hiding, exit, main):")
+    path = file_input()
+
+    if choice != 3:
+        print("please enter your key:")
+        key = int_input(1, float("inf"))
     else:
         key = None
 
-    menus[response](path, key)
+    menus[choice](path, key)
 
 
 def decrypting_input():
     print("""
-            Which decryption method to use?
-            1. Caesar
-            2. Transposition
-            3. RSA""")
-    response = pyip.inputInt("Please enter your choice as a num 1 - 3: \n", min=1, max=3)
+        Which decryption method to use?
+        1. Caesar
+        2. Transposition
+        3. RSA""")
+
+    choice =  int_input(1, 3)
 
     menus = {
         1: encryption.caesar_cipher,
@@ -42,29 +76,30 @@ def decrypting_input():
         3: encryption.rsa_cipher,
 
     }
-    path = pyip.inputFilepath("Enter the path to the input file: ", mustExist=True)
-    if response != 3:
-        key = pyip.inputInt("please enter your key: ")
+    print("Please enter your choice (A path to the message to hiding, exit, main):")
+    path = file_input()
+
+    if choice != 3:
+        print("please enter your key:")
+        key = int_input(1, float("inf"))
     else:
         key = None
 
-    menus[response](path, key, False)
+    menus[choice](path, key, False)
 
 
 def steganography_input():
-    print("Hiding a message in an image:")
-    image_path = pyip.inputFilepath("Enter the path to the input file: ", mustExist=True)
-    message = pyip.inputStr("Enter the message to the hiding:")
+    print("Please enter your choice (A path to the image file to hiding in it, exit, main):")
+    image_path = file_input()
+    print("Please enter your choice (A path to the message to hiding, exit, main):")
+    message = file_input()
 
     img_encode.hide_message(image_path, message)
 
 
 def steganography_extraction_input():
-    print("Extracting a message from an image:")
-    image_path = pyip.inputFilepath("Enter the encrypted image file name: ")
+    print("Please enter your choice (A path to the encrypted image file, exit, main):")
+    image_path = file_input()
+
+
     img_decode.extract_message(image_path)
-
-
-def stap_run():
-    print("Exit:")
-    return
