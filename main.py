@@ -1,9 +1,8 @@
-from input_functions import *
+import pyinputplus as pyip
 
-run = True
-
-while True:
-    def main():
+def main():
+    from input_functions import encrypting_input, decrypting_input, steganography_input, steganography_extraction_input
+    while True:
         print("""
         What would you like to do?
         1. Encrypt a text file
@@ -24,6 +23,6 @@ while True:
         menus[response]()
 
 
-    if __name__ == '__main__':
-        main()
+if __name__ == '__main__':
+    main()
 
