@@ -28,6 +28,9 @@ def caesar_cipher(path, key, encrypt=True):
     # Read the file content to encrypt/decrypt
     text = read_file(path)
 
+    if key % 26 == 0:
+        return print("Error: The encryption keys cannot be a multiple of 26.")
+
     # Adjust key if decrypting
     if not encrypt:
         key = -key
