@@ -61,9 +61,9 @@ def encrypting_input():
         1. Caesar
         2. Advance_Caesar
         3. Transposition
-        4. Advance_Caesar
+        4. Advance_Transposition
         5. RSA
-        6. Advance_Caesar""")
+        6. Advance_RSA""")
 
     choice =  int_input(1, 6)
 
@@ -75,12 +75,12 @@ def encrypting_input():
         5: encryption.rsa_cipher,
         6: advanced_encryption.rsa_cipher
     }
-    print("Please enter your choice (A path to the message to hiding, exit, main):")
+    print("Please enter your choice (A path to the message file to hiding, exit, main):")
     path = file_input()
 
-    if choice != 3:
+    if choice <= 4:
         print("please enter your key:")
-        if choice != 4:
+        if choice % 2 == 1:
             key = int_input(1, float("inf"))
         else:
             key = str_input()
@@ -94,9 +94,9 @@ def decrypting_input():
         1. Caesar
         2. Advance_Caesar
         3. Transposition
-        4. Advance_Caesar
+        4. Advance_Transposition
         5. RSA
-        6. Advance_Caesar""")
+        6. Advance_RSA""")
 
     choice =  int_input(1, 6)
 
@@ -108,12 +108,12 @@ def decrypting_input():
         5: encryption.rsa_cipher,
         6: advanced_encryption.rsa_cipher
     }
-    print("Please enter your choice (A path to the message to hiding, exit, main):")
+    print("Please enter your choice (A path to the hidden message file, exit, main):")
     path = file_input()
 
-    if choice != 3:
+    if choice <= 4:
         print("please enter your key:")
-        if choice != 4:
+        if choice % 2 == 1:
             key = int_input(1, float("inf"))
         else:
             key = str_input()
@@ -124,7 +124,7 @@ def decrypting_input():
 def steganography_input():
     print("Please enter your choice (A path to the image file to hiding in it, exit, main):")
     image_path = file_input()
-    print("Please enter your choice (A path to the message to hiding, exit, main):")
+    print("Please enter your choice (A path to the message file to hiding, exit, main):")
     message = file_input()
 
     img_encode.hide_message(image_path, message)

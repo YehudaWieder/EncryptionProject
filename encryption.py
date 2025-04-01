@@ -2,6 +2,7 @@ from file_functions import *
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
 
+
 def generate_keys():
     # Generate a new RSA key pair with a size of 2048 bits
     key = RSA.generate(2048)
@@ -18,41 +19,43 @@ def generate_keys():
 
     print("RSA keys generated successfully!")
 
+
 # Generate RSA key pair
 generate_keys()
 
-def caesar_cipher(path, key, encrypt=True):
-        text = read_file(path)
-        if not encrypt:
-            key = -key
 
-        result = ""
-        for char in text:
-            if char.isalpha():
-                shift = 65 if char.isupper() else 97
-                result += chr((ord(char) - shift + key) % 26 + shift)
-            else:
-                result += char
-        write_result_file(path, result, encrypt)
+def caesar_cipher(path, key, encrypt=True):
+    text = read_file(path)
+    if not encrypt:
+        key = -key
+
+    result = ""
+    for char in text:
+        if char.isalpha():
+            shift = 65 if char.isupper() else 97
+            result += chr((ord(char) - shift + key) % 26 + shift)
+        else:
+            result += char
+    write_result_file(path, result, encrypt)
+
 
 def transposition_cipher(path, key, encrypt=True):
-    try:
-        text = read_file(path)
-        if key > len(text) // 2:
-            return print("For good encryption performance, is required a key that his max value is half the length of the text.")
+    text = read_file(path)
+    if key > len(text) // 2 or key < 2:
+        return print(
+            "For good encryption performance is required a key that is greater than 1 and his max value is half the length of the text.")
 
-        if encrypt:
-            text += " " * (-len(text) % key)
-        else:
-            key = len(text) // key
-        n = len(text)
-        result = ""
-        for i in range(key):
-            for j in range(i, n, key):
-                result += text[j]
-        write_result_file(path, result, encrypt)
-    except FileNotFoundError:
-        print(f"Error: File '{path}' not found.")
+    if encrypt:
+        text += " " * (-len(text) % key)
+    else:
+        key = len(text) // key
+    n = len(text)
+    result = ""
+    for i in range(key):
+        for j in range(i, n, key):
+            result += text[j]
+    write_result_file(path, result, encrypt)
+
 
 def rsa_cipher(path, encrypt=True):
     text = read_file(path)
@@ -76,7 +79,3 @@ def rsa_cipher(path, encrypt=True):
 
     # Save the encrypted data to the output file
     write_result_file(path, result, encrypt)
-
-
-
-
