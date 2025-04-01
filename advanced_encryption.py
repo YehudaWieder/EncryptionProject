@@ -1,7 +1,28 @@
 from file_functions import *
 
-def caesar_cipher(path, key_word, encrypt=True):
-    pass
+#def caesar_cipher(path, key_word, encrypt=True):
+ #   pass
+def caesar_cipher(path, keys, encrypt=True):
+    text = read_file(path)
+    keys = [int(k) for k in keys.split()]
+    k = len(keys)
+
+    if any(key % 26 == 0 for key in keys):
+        return print("Error: The encryption keys cannot be a multiple of 26.")
+
+    if not encrypt:
+        keys = [-key for key in keys]
+
+    result = ""
+    for i, char in enumerate(text):
+        if char.isalpha():
+            shift = 65 if char.isupper() else 97
+            key = keys[i % k]  # בחירת המפתח המתאים לפי המיקום בטקסט
+            result += chr((ord(char) - shift + key) % 26 + shift)
+        else:
+            result += char
+
+    write_result_file(path, result, encrypt)
 
 
 def get_sorted_indexes(key_word, encrypt=True):
