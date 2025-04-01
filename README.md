@@ -35,11 +35,13 @@ EncryptionProject is a Python-based tool for encrypting and decrypting files and
    cd EncryptionProject
    ```
    
-3. Install the required dependencies:
+
+3. Before running the project, install the required dependencies by running:
+
    ```bash
    pip install -r requirements.txt
    ```
-
+   
 ## Usage
 
 1. Run the main script:
