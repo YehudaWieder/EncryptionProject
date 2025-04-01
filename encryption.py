@@ -25,35 +25,50 @@ generate_keys()
 
 
 def caesar_cipher(path, key, encrypt=True):
+    # Read the file content to encrypt/decrypt
     text = read_file(path)
+
+    # Adjust key if decrypting
     if not encrypt:
         key = -key
 
     result = ""
     for char in text:
+        # If the character is an alphabet, apply Caesar cipher shift
         if char.isalpha():
             shift = 65 if char.isupper() else 97
             result += chr((ord(char) - shift + key) % 26 + shift)
         else:
-            result += char
+            result += char  # Non-alphabetic characters are added as is
+
+    # Write the result to a new file (encrypted or decrypted)
     write_result_file(path, result, encrypt)
 
 
 def transposition_cipher(path, key, encrypt=True):
+    # Read the file content
     text = read_file(path)
+
+    # Ensure the key is valid
     if key > len(text) // 2 or key < 2:
         return print(
-            "For good encryption performance is required a key that is greater than 1 and his max value is half the length of the text.")
+            "For good encryption performance, the key should be greater than 1 and no larger than half the length of the text.")
 
+    # Adjust the text length by adding padding if encrypting
     if encrypt:
-        text += " " * (-len(text) % key)
+        text += " " * (-len(text) % key)  # Add spaces to make text divisible by the key
     else:
-        key = len(text) // key
+        key = len(text) // key  # For decryption, adjust the key based on text length
+
     n = len(text)
     result = ""
+
+    # Apply the transposition cipher logic
     for i in range(key):
         for j in range(i, n, key):
             result += text[j]
+
+    # Write the result to a new file (encrypted or decrypted)
     write_result_file(path, result, encrypt)
 
 

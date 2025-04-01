@@ -3,29 +3,48 @@ from file_functions import *
 def caesar_cipher(path, key_word, encrypt=True):
     pass
 
+
 def get_sorted_indexes(key_word, encrypt=True):
-    sorted_positions =  [new_pos for new_pos, _ in sorted(enumerate(key_word), key=lambda x: x[1])]
+    # Get sorted positions based on the key word
+    sorted_positions = [new_pos for new_pos, _ in sorted(enumerate(key_word), key=lambda x: x[1])]
+
+    # Return the sorted positions if encrypting
     if encrypt:
         return sorted_positions
+
+    # If decrypting, reverse the sorted positions
     reverse_positions = [i for i, _ in sorted(enumerate(sorted_positions), key=lambda x: x[1])]
     return reverse_positions
 
+
 def transposition_cipher(path, key_word, encrypt=True):
     text = read_file(path)
+
+    # Check if the key word is long enough for encryption
     if len(key_word) < 2:
-        return print("For good encryption performance is required a key-word that is longer than 1 letter")
+        return print("For good encryption performance, the key-word must be longer than 1 letter.")
+
     result = ""
+
+    # Encryption process
     if encrypt:
+        # Add padding to the text if necessary to make it divisible by the length of the key word
         text += " " * (-len(text) % len(key_word))
-        keyword_indexed = get_sorted_indexes(key_word)
+        keyword_indexed = get_sorted_indexes(key_word)  # Get sorted positions of the key word
         skips = len(key_word)
+
+        # Loop through sorted key word positions and create the encrypted text
         for i in keyword_indexed:
             for j in range(i, len(text), skips):
                 result += text[j]
         write_result_file(path, result, encrypt)
+
+    # Decryption process
     else:
-        keyword_indexed = get_sorted_indexes(key_word, False)
+        keyword_indexed = get_sorted_indexes(key_word, False)  # Reverse sorted positions
         skips = len(text) // len(key_word)
+
+        # Loop through and decrypt the message
         for i in range(skips):
             for j in keyword_indexed:
                 result += text[j * skips + i]
