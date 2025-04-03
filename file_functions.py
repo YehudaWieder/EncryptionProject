@@ -7,6 +7,11 @@ def read_file(path):
         text = f.read()
         return text
 
+def read_bit_file(path):
+    with codecs.open(path, "rb") as f:
+        # Read and return the text content from the file
+        text = f.read()
+        return text
 
 # Function to write the result (encrypted or decrypted text) to a new file
 def write_result_file(path: str, string, encrypt=True):
@@ -18,6 +23,19 @@ def write_result_file(path: str, string, encrypt=True):
 
     # Open the new file in write mode and save the result
     with open(f'{new_path}', "w", encoding='utf-8') as file:
+        file.write(string)
+        # Print a success message with the file's path
+        print(f"{extension}ryption Successfully wrote to {new_path}")
+
+def write_result_bit_file(path: str, string, encrypt=True):
+    # Determine the file extension based on encryption or decryption
+    extension = "enc" if encrypt else "dec"
+
+    # Generate the new file path by replacing the original file's extension with '.enc' or '.dec'
+    new_path = f"{path.rsplit('.', 1)[0]}.{extension}"
+
+    # Open the new file in write mode and save the result
+    with open(f'{new_path}', "wb") as file:
         file.write(string)
         # Print a success message with the file's path
         print(f"{extension}ryption Successfully wrote to {new_path}")

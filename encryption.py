@@ -73,11 +73,11 @@ def transposition_cipher(path, key, encrypt=True):
 
 
 def rsa_cipher(path, encrypt=True):
-    text = read_file(path)
+    text = read_bit_file(path)
     if encrypt:
         key_path = "public.pem"
     else:
-        key_path = "private.pen"
+        key_path = "private.pem"
 
     # Load the key from the given file
     with open(key_path, "rb") as key_file:
@@ -91,6 +91,5 @@ def rsa_cipher(path, encrypt=True):
         result = cipher_rsa.encrypt(text)
     else:
         result = cipher_rsa.decrypt(text)
-
     # Save the encrypted data to the output file
-    write_result_file(path, result, encrypt)
+    write_result_bit_file(path, result, encrypt)
