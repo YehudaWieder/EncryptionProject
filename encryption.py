@@ -1,23 +1,128 @@
 from file_functions import *
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
+import os
+import random
+import pickle
 
 
 def generate_keys():
-    # Generate a new RSA key pair with a size of 2048 bits
-    key = RSA.generate(2048)
+    """
+        Generates RSA public and private keys. If keys exist in the file, they are loaded from there.
+        :return: A tuple of (public_key, private_key)
+    """
+    if os.path.exists("keys.pkl"):
+        with open("keys.pkl", "rb") as key_file:
+            return pickle.load(key_file)
 
-    # Export and save the private key to a file (private.pem)
-    private_key = key.export_key()
-    with open("private.pem", "wb") as priv_file:
-        priv_file.write(private_key)
+    # Create two large prime numbers
+    prime_1 = generate_large_prime()
+    prime_2 = generate_large_prime()
 
-    # Export and save the public key to a file (public.pem)
-    public_key = key.public_key().export_key()
-    with open("public.pem", "wb") as pub_file:
-        pub_file.write(public_key)
+    # Calculate modulus n and Euler's quotient
+    n = prime_1 * prime_2
+    euler_n = (prime_1 - 1) * (prime_2 - 1)
 
-    print("RSA keys generated successfully!")
+    # Public exponent (common value is 65537)
+    e = 65537
+
+    # Calculate the private exponent (modular inverse)
+    d = find_mod_inverse(e, euler_n)
+
+    pub_key = (n, e)
+    priv_key = (n, d)
+
+    # Save keys for future use
+    with open("keys.pkl", "wb") as key_file:
+        pickle.dump((pub_key, priv_key), key_file)
+
+    return pub_key, priv_key
+
+
+def generate_large_prime(bits=1024):
+    """
+        Generates a large prime number with specified bits.
+        :param bits: Number of bits for the prime number.
+        :return: A random large prime number
+    """
+    num = 0
+    while not is_prime(num):
+        num = random.getrandbits(bits) | 1  # Ensure odd number
+    return num
+
+
+def is_prime(n):
+    """
+        Miller-Rabin primality test to check if a number is prime.
+        :param n: The number to test for primality.
+        :return: True if prime, False otherwise
+    """
+    if n < 2:
+        return False
+    if n == 2 or n == 3:
+        return True
+    # Check if the number is even
+    if n % 2 == 0:
+        return False
+
+    s = find_s(n - 1)
+    d = (n - 1) // (2 ** s)
+
+    for _ in range(10):
+        a = random.randint(2, n - 2)
+        x = pow(a, d, n)
+        if x == 1 or x == n - 1:
+            continue
+        for _ in range(s - 1):
+            x = pow(x, 2, n)
+            if x == n - 1:
+                break
+        else:
+            return False
+
+    return True
+
+
+def find_s(n):
+    """
+        Finds s such that n-1 = 2^s * d, where d is odd.
+        :param n: The number to decompose.
+        :return: The value of s
+    """
+    s = 0
+    while n % 2 == 0:
+        s += 1
+        n //= 2
+    return s
+
+
+def extended_euclid_algo(a, b):
+    """
+        Extended Euclidean algorithm to find gcd(a, b) and coefficients x, y such that a*x + b*y = gcd(a, b)
+        :param a: First integer
+        :param b: Second integer
+        :return: GCD, x, and y coefficients
+    """
+    if a == 0:
+        return b, 0, 1
+    gcd, x1, y1 = extended_euclid_algo(b % a, a)
+    x = y1 - (b // a) * x1
+    y = x1
+    return gcd, x, y
+
+
+def find_mod_inverse(a, b):
+    """
+        Finds the modular inverse of a modulo b using the extended Euclidean algorithm.
+        :param a: The integer to find the inverse of
+        :param b: The modulus
+        :return: The modular inverse of a mod b
+    """
+    gcd, x, y = extended_euclid_algo(a, b)
+    if gcd != 1:
+        raise ValueError(f"No modular inverse exists for {a} modulo {b}")
+    return x % b
+
 
 
 # Generate RSA key pair
