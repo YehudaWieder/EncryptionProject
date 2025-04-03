@@ -6,13 +6,13 @@ def text_to_binary(text):
     """convert to binary (ASCII → Binary)"""
     return ''.join(format(ord(char), '08b') for char in text)
 
-def hide_message(image_path, path):
+def hide_message(image_path, message_path):
     # upload img
     img = Image.open(image_path)
     pixels = list(img.getdata())
 
     #convert to binary
-    message = read_file(path)
+    message = read_file(message_path)
     binary_message = text_to_binary(message)
     message_length = len(binary_message)
 
