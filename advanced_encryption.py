@@ -17,7 +17,7 @@ def caesar_cipher(path, keys, encrypt=True):
     for i, char in enumerate(text):
         if char.isalpha():
             shift = 65 if char.isupper() else 97
-            key = keys[i % k]  # בחירת המפתח המתאים לפי המיקום בטקסט
+            key = keys[i % k]       
             result += chr((ord(char) - shift + key) % 26 + shift)
         else:
             result += char
